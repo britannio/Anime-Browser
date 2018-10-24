@@ -14,14 +14,15 @@ class DescriptionPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).primaryColor,
       appBar: AppBar(
-        backgroundColor: Colors.blue,
+        backgroundColor: Theme.of(context).backgroundColor,
         elevation: 0.0,
       ),
       body: ListView(
         children: <Widget>[
           Container(
-            color: Colors.blue,
+            color: Theme.of(context).backgroundColor,
             padding: EdgeInsets.symmetric(horizontal: 48.0, vertical: 20.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -50,11 +51,11 @@ class DescriptionPage extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           SizedBox(height: 32.0),
-                          Text(
-                            category,
-                            style: TextStyle(
-                                fontSize: 16.0, color: Colors.white70),
-                          ),
+                          Text(category,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .subhead
+                                  .copyWith(fontSize: 16.0)),
                           SizedBox(height: 16.0),
                           Row(
                             children: <Widget>[
@@ -75,8 +76,10 @@ class DescriptionPage extends StatelessWidget {
                           SizedBox(height: 16.0),
                           Text(
                             studio,
-                            style: TextStyle(
-                                fontSize: 16.0, color: Colors.white70),
+                            style: Theme.of(context)
+                                .textTheme
+                                .subhead
+                                .copyWith(fontSize: 16.0),
                           ),
                         ],
                       ),
@@ -89,7 +92,7 @@ class DescriptionPage extends StatelessWidget {
                 Row(
                   children: <Widget>[
                     Expanded(
-                                          child: Text(
+                      child: Text(
                         name,
                         style: TextStyle(
                           fontSize: 32.0,
@@ -104,10 +107,31 @@ class DescriptionPage extends StatelessWidget {
             ),
           ),
           Container(
-            margin: EdgeInsets.symmetric(horizontal: 32.0, vertical: 20.0),
-            child: Text(
-              description,
-              style: TextStyle(color: Colors.grey.shade600),
+            padding: EdgeInsets.symmetric(horizontal: 32.0, vertical: 20.0),
+            child: Column(
+              children: <Widget>[
+                Text(
+                  description,
+                  style: Theme.of(context)
+                      .textTheme
+                      .body1
+                      .copyWith(fontSize: 16.0),
+                ),
+                Container(
+                  /* child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    children: <Widget>[
+                      Container(
+                        width: 64.0,
+                        height: 64.0,
+                        padding: EdgeInsets.all(4.0),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Theme.of(context).dividerColor)
+                        ),
+                      )
+                    ],), */
+                )
+              ],
             ),
           ),
         ],
