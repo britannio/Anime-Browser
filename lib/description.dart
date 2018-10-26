@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class DescriptionPage extends StatelessWidget {
   final String img;
@@ -30,16 +31,15 @@ class DescriptionPage extends StatelessWidget {
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Container(
-                      // Image
+                    CachedNetworkImage(
                       width: 100.0,
                       height: 160.0,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: NetworkImage(img),
-                          fit: BoxFit.fitHeight,
-                        ),
+                      fit: BoxFit.fitHeight,
+                      imageUrl: img,
+                      placeholder: Container(
+                        color: Theme.of(context).primaryColorLight,
                       ),
+                      errorWidget: Icon(Icons.error),
                     ),
                     SizedBox(
                       width: 16.0,
@@ -90,6 +90,7 @@ class DescriptionPage extends StatelessWidget {
                   height: 24.0,
                 ),
                 Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     Expanded(
                       child: Text(
@@ -100,7 +101,20 @@ class DescriptionPage extends StatelessWidget {
                         ),
                         overflow: TextOverflow.ellipsis,
                       ),
-                    )
+                    ),
+                    Material(
+                      color: Theme.of(context).backgroundColor,
+                      child: IconButton(
+                        tooltip: "Favourite",
+                        icon: Icon(
+                          Icons.favorite_border,
+                          color: Theme.of(context).accentColor,
+                        ),
+                        onPressed: () {
+                          print(name + " added to favourites");
+                        },
+                      ),
+                    ),
                   ],
                 ),
               ],
@@ -118,7 +132,7 @@ class DescriptionPage extends StatelessWidget {
                       .copyWith(fontSize: 16.0),
                 ),
                 Container(
-                  /* child: ListView(
+                    /* child: ListView(
                     scrollDirection: Axis.horizontal,
                     children: <Widget>[
                       Container(
@@ -130,7 +144,7 @@ class DescriptionPage extends StatelessWidget {
                         ),
                       )
                     ],), */
-                )
+                    )
               ],
             ),
           ),

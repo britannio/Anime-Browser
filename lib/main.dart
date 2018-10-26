@@ -10,25 +10,21 @@ TODO
  - In the description page, after the description show a horizontal row of similar anime based on the category of the anime being viewed
  - Think about a dynamic homepage with more compact cards
  - Put the info dialog and theme change switch in a navigation drawer
- = Implement the favourites page feature
-
- DONE
- - Improve InkWell card press
- - Added a navigation drawer
- - Added tabs to the main page
- - Added a favourites page
+ - Implement the favourites page feature
+ - Use SQL to store item information
 
  */
 
 void main() => runApp(new MyApp());
 
-const String appName = "Anime Catalog";
+const String appName = "Anime Browser";
 
 final ThemeData _darkTheme = ThemeData(
   backgroundColor: Color(0xFF141414),
   cardColor: Color(0xFF212121),
   accentColor: Colors.blue,
   primaryColor: Color(0xFF212121),
+  primaryColorLight: Color(0xFF484848),
   textTheme: TextTheme(
       title: TextStyle(
         color: Colors.white,
@@ -127,17 +123,32 @@ class _MainPageState extends State<MainPage> {
                 DrawerHeader(
                   child: Center(
                       child: Text(appName,
-                          style: Theme.of(context).textTheme.title)),
+                          style: Theme.of(context).textTheme.title.copyWith(fontSize: 32.0))),
                   decoration:
                       BoxDecoration(color: Theme.of(context).accentColor),
                 ),
                 ListTile(
-                  title: Text("Info", style: Theme.of(context).textTheme.title,),
+                  title: Text(
+                    "Info",
+                    style: Theme.of(context).textTheme.title.copyWith(fontSize: 16.0),
+                  ),
                   onTap: () {
                     _infoDialog();
                     Navigator.pop(
                         context); // closes the drawer after this item is pressed
                   },
+                ),
+                ListTile(
+                  title: Text(
+                    "Dark Mode",
+                    style: Theme.of(context).textTheme.title.copyWith(fontSize: 16.0),
+                  ),
+                  trailing: Switch(
+                    value: bool.fromEnvironment(appName),
+                    onChanged: (bool value){
+                      print(value);
+                    },
+                  ),
                 )
               ],
             ),
