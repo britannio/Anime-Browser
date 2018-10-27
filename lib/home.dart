@@ -68,6 +68,7 @@ class _HomePageState extends State<HomePage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Container(
+              // Contains the image
               width: 100.0,
               height: 160.0,
               decoration: BoxDecoration(
@@ -102,32 +103,34 @@ class _HomePageState extends State<HomePage> {
                           .subhead
                           .copyWith(fontSize: 16.0)),
                   SizedBox(height: 10.0),
-                  DecoratedBox(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.rectangle,
-                        color: Colors.blue,
-                        borderRadius: BorderRadius.circular(5.0)),
-                    child: Container(
-                      margin:
-                          EdgeInsets.symmetric(horizontal: 4.0, vertical: 2.0),
-                      child: Row(
-                        children: <Widget>[
-                          Icon(
-                            Icons.star,
-                            color: Colors.yellow,
-                          ),
-                          SizedBox(
-                            width: 2.0,
-                          ),
-                          Text(data[index]["Rating"],
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16.0)),
-                        ],
-                      ),
-                    ),
-                  ),
+                  Row(
+                    children: <Widget>[
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5.0),
+                          //shape: BoxShape.rectangle,
+                          color: Theme.of(context).accentColor,
+                        ),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 4.0, vertical: 2.0),
+                        child: Row(
+                          children: <Widget>[
+                            Icon(
+                              Icons.star,
+                              color: Colors.yellow,
+                            ),
+                            SizedBox(
+                              width: 2.0,
+                            ),
+                            Text(data[index]["Rating"],
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16.0)),
+                          ],
+                        ),
+                    )
+                  ],),
                   SizedBox(height: 10.0),
                   Row(
                     children: <Widget>[

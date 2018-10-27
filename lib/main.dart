@@ -9,10 +9,10 @@ TODO
  - Add shared element transitions to the anime image 
  - In the description page, after the description show a horizontal row of similar anime based on the category of the anime being viewed
  - Think about a dynamic homepage with more compact cards
- - Put the info dialog and theme change switch in a navigation drawer
  - Implement the favourites page feature
- - Use SQL to store item information
+ - Use SQL or firebase to store item information
 
+ Done
  */
 
 void main() => runApp(new MyApp());
