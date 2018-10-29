@@ -45,6 +45,7 @@ class _HomePageState extends State<HomePage> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
       color: Theme.of(context).cardColor,
       child: InkWell(
+        borderRadius: BorderRadius.circular(4.0), // BR of the splash
         enableFeedback: true,
         onTap: () {
           // Go to the description page
@@ -111,8 +112,8 @@ class _HomePageState extends State<HomePage> {
                           //shape: BoxShape.rectangle,
                           color: Theme.of(context).accentColor,
                         ),
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 4.0, vertical: 2.0),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 4.0, vertical: 2.0),
                         child: Row(
                           children: <Widget>[
                             Icon(
@@ -122,15 +123,18 @@ class _HomePageState extends State<HomePage> {
                             SizedBox(
                               width: 2.0,
                             ),
-                            Text(data[index]["Rating"],
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16.0)),
+                            Text(
+                              data[index]["Rating"],
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16.0),
+                            ),
                           ],
                         ),
-                    )
-                  ],),
+                      )
+                    ],
+                  ),
                   SizedBox(height: 10.0),
                   Row(
                     children: <Widget>[

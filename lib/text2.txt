@@ -1,0 +1,67 @@
+/* SliverFixedExtentList(
+            itemExtent: 50.0, // item spacing
+            delegate: SliverChildBuilderDelegate(
+              (context, index) => (index <= 5 && index >= 1) ? ListTile(
+                    title: Text("List item $index"),
+                  ) : null,
+            ), // builder delegate is for dynamic content
+          ), */
+
+          /* Container(
+            padding: EdgeInsets.symmetric(horizontal: 32.0, vertical: 20.0),
+            child: Column(
+              children: <Widget>[
+                Text(
+                  description,
+                  style: Theme.of(context)
+                      .textTheme
+                      .body1
+                      .copyWith(fontSize: 16.0),
+                ),
+                Container(
+                    child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    children: <Widget>[
+                      Container(
+                        width: 64.0,
+                        height: 64.0,
+                        padding: EdgeInsets.all(4.0),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Theme.of(context).dividerColor)
+                        ),
+                      )
+                    ],), 
+
+
+
+                    /* SliverFillRemaining(
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 32.0, vertical: 20.0),
+              child: Column(
+                children: <Widget>[
+                  Text(
+                    description,
+                    style: Theme.of(context)
+                        .textTheme
+                        .body1
+                        .copyWith(fontSize: 16.0),
+                  ),
+                  /* Container(
+                    child: ListView(
+                      scrollDirection: Axis.horizontal,
+                      children: <Widget>[
+                        Container(
+                          width: 64.0,
+                          height: 64.0,
+                          padding: EdgeInsets.all(4.0),
+                          decoration: BoxDecoration(
+                              border: Border.all(
+                                  color: Theme.of(context).dividerColor)),
+                        )
+                      ],
+                    ),
+                  ) */
+                ],
+              ),
+            ),
+          ),] */

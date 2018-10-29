@@ -1,16 +1,23 @@
 import 'package:flutter/material.dart';
 import 'home.dart';
 import 'favourites.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 /* 
 TODO
+ - Complete the navigation drawer
  - Use slivers to create the collapsing toolbar effect for the description page
  - Make the hyperlink in the information dialog work 
  - Add shared element transitions to the anime image 
  - In the description page, after the description show a horizontal row of similar anime based on the category of the anime being viewed
- - Think about a dynamic homepage with more compact cards
  - Implement the favourites page feature
+ - Create a larger dataset using myanimelist.com
+ - Add a splash screen on Android and IOS
+ - Add an app icon
+
+CONSIDER
  - Use SQL or firebase to store item information
+ - Think about a dynamic homepage with more compact cards
 
  Done
  */
@@ -19,37 +26,36 @@ void main() => runApp(new MyApp());
 
 const String appName = "Anime Browser";
 
+final ThemeData _baseDarkTheme = ThemeData(primaryColor: Color(0xFF212121));
+
 final ThemeData _darkTheme = ThemeData(
   backgroundColor: Color(0xFF141414),
-  cardColor: Color(0xFF212121),
+  cardColor: _baseDarkTheme.primaryColor,
   accentColor: Colors.blue,
-  primaryColor: Color(0xFF212121),
+  primaryColor: _baseDarkTheme.primaryColor,
   primaryColorLight: Color(0xFF484848),
   textTheme: TextTheme(
-      title: TextStyle(
-        color: Colors.white,
-        fontWeight: FontWeight.bold,
-        fontSize: 20.0,
-      ),
-      subhead: TextStyle(color: Color(0xFF9E9E9E)),
-      body1: TextStyle(color: Colors.white)),
+    title: TextStyle(
+      color: Colors.white,
+      fontWeight: FontWeight.bold,
+      fontSize: 20.0,
+    ),
+    subhead: TextStyle(color: Color(0xFF9E9E9E)),
+    headline: TextStyle(color: Color(0xFF9E9E9E)),
+    body1: TextStyle(color: Colors.white),
+  ),
+  dialogBackgroundColor: _baseDarkTheme.primaryColor,
+  dividerColor: Color(0xFF9E9E9E),
 );
 
-class MyApp extends StatefulWidget {
-  @override
-  MyAppState createState() {
-    return new MyAppState();
-  }
-}
+final ThemeData _lightTheme = ThemeData();
 
-class MyAppState extends State<MyApp> {
-  bool _darkThemeEnabled = true;
-
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
       title: appName,
-      theme: _darkThemeEnabled ? _darkTheme : ThemeData.light(),
+      theme: _darkTheme,
       home: new MainPage(),
     );
   }
@@ -65,6 +71,8 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
+  bool _darkThemeEnabled = true;
+
   @override
   Widget build(BuildContext context) {
     final GlobalKey<ScaffoldState> _scaffoldKey =
@@ -118,38 +126,46 @@ class _MainPageState extends State<MainPage> {
           child: Container(
             color: Theme.of(context).backgroundColor,
             child: ListView(
-              padding: EdgeInsets.zero,
+              padding: EdgeInsets.zero, // Removes padding
               children: <Widget>[
                 DrawerHeader(
                   child: Center(
                       child: Text(appName,
-                          style: Theme.of(context).textTheme.title.copyWith(fontSize: 32.0))),
+                          style: Theme.of(context)
+                              .textTheme
+                              .title
+                              .copyWith(fontSize: 32.0))),
                   decoration:
                       BoxDecoration(color: Theme.of(context).accentColor),
                 ),
-                ListTile(
+                SwitchListTile(
                   title: Text(
-                    "Info",
-                    style: Theme.of(context).textTheme.title.copyWith(fontSize: 16.0),
+                    "Dark Mode",
+                    style: Theme.of(context)
+                        .textTheme
+                        .title
+                        .copyWith(fontSize: 16.0),
                   ),
-                  onTap: () {
-                    _infoDialog();
-                    Navigator.pop(
-                        context); // closes the drawer after this item is pressed
+                  value: _darkThemeEnabled,
+                  onChanged: (bool value) {
+                    print(value);
+                    _darkThemeEnabled = value;
                   },
                 ),
                 ListTile(
                   title: Text(
-                    "Dark Mode",
-                    style: Theme.of(context).textTheme.title.copyWith(fontSize: 16.0),
+                    "App Info",
+                    style: Theme.of(context)
+                        .textTheme
+                        .title
+                        .copyWith(fontSize: 16.0),
                   ),
-                  trailing: Switch(
-                    value: bool.fromEnvironment(appName),
-                    onChanged: (bool value){
-                      print(value);
-                    },
-                  ),
-                )
+                  onTap: () {
+                    Navigator.pop(
+                        context); // closes the drawer after this item is pressed
+                    _infoDialog();
+                  },
+                ),
               ],
             ),
           ),
@@ -170,21 +186,21 @@ class _MainPageState extends State<MainPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(appName),
+          title: Text(appName, style: Theme.of(context).textTheme.title),
           content: RichText(
             text: TextSpan(
-                text:
-                    "This is a flutter equivalent of an app previously made with native android code. It used a network request to fetch the following json file then outputted a styled equivalent.\nsrc:",
-                style: TextStyle(color: Colors.black),
-                children: [
-                  TextSpan(
-                    text: "http://androiddemos.britannio.com/anime.json",
-                    style: TextStyle(
-                        color: Colors.blueAccent,
-                        decoration: TextDecoration.underline),
-                    //recognizer: TapGestureRecognizer()..onTap = (){}
-                  )
-                ]),
+              text:
+                  "This is a flutter equivalent of an app previously made with native android code. The native android version only fetched a json file and outputted it as a styled list of cards, this version has many more features.",
+              style: Theme.of(context).textTheme.body1,
+              /* children: <TextSpan>[
+                TextSpan(
+                  text: "http://androiddemos.britannio.com/anime.json",
+                  style: TextStyle(
+                      color: Colors.blueAccent,
+                      decoration: TextDecoration.underline),
+                )
+              ], */
+            ),
           ),
           actions: <Widget>[
             FlatButton(
@@ -193,10 +209,25 @@ class _MainPageState extends State<MainPage> {
                 Navigator.of(context).pop();
               },
             ),
+            FlatButton(
+              child: Text("GITHUB"),
+              onPressed: () {
+                Navigator.of(context).pop();
+                _launchURL("https://github.com/britannio/Anime-Browser");
+              },
+            ),
           ],
         );
       },
     );
+  }
+
+  _launchURL(url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 
   /* void _choiceAction(String choice) {
@@ -205,3 +236,27 @@ class _MainPageState extends State<MainPage> {
     }
   } */
 }
+
+/* class _LinkTextSpan extends TextSpan {
+
+  // Beware!
+  //
+  // This class is only safe because the TapGestureRecognizer is not
+  // given a deadline and therefore never allocates any resources.
+  //
+  // In any other situation -- setting a deadline, using any of the less trivial
+  // recognizers, etc -- you would have to manage the gesture recognizer's
+  // lifetime and call dispose() when the TextSpan was no longer being rendered.
+  //
+  // Since TextSpan itself is @immutable, this means that you would have to
+  // manage the recognizer from outside the TextSpan, e.g. in the State of a
+  // stateful widget that then hands the recognizer to the TextSpan.
+
+  _LinkTextSpan({ TextStyle style, String url, String text }) : super(
+    style: style,
+    text: text ?? url,
+    recognizer: TapGestureRecognizer()..onTap = () {
+      launch(url, forceSafariVC: false);
+    }
+  );
+} */
