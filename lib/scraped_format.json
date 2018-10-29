@@ -1,0 +1,16 @@
+    [
+        {
+            "name": "Naruto: Shippuuden",
+            "description": "It has been two and a half years since Naruto Uzumaki left Konohagakure, the Hidden Leaf Village, for intense training following events which fueled his desire to be stronger. Now Akatsuki, the mysterious organization of elite rogue ninja, is closing in on their grand plan which may threaten the safety of the entire shinobi world.",
+            "Rating": "8.16",
+            "category":"Animation | Drama | Adventure",
+            "studio":"Studio Pierrot",
+            "img": "https://myanimelist.cdn-dena.com/images/anime/5/17407.jpg",
+            "popularity": 1,
+            "episodes": 42,
+            "season": "Fall 2006",
+            "genres": ["genre1", "genre2", "genre3"],
+            "mal_id": 2122,
+            "mal_url": "https://myanimelist.net/anime/2122/Anime_Name"
+        }
+    ]

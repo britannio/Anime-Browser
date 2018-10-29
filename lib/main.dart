@@ -94,6 +94,7 @@ class _MainPageState extends State<MainPage> {
                   title: new Text(appName),
                   actions: <Widget>[
                     IconButton(
+                      tooltip: "Sort by",
                       icon: Icon(Icons.sort),
                       onPressed: () {
                         final snackBar = SnackBar(
@@ -138,7 +139,7 @@ class _MainPageState extends State<MainPage> {
                   decoration:
                       BoxDecoration(color: Theme.of(context).accentColor),
                 ),
-                SwitchListTile(
+                /* SwitchListTile(
                   title: Text(
                     "Dark Mode",
                     style: Theme.of(context)
@@ -151,7 +152,7 @@ class _MainPageState extends State<MainPage> {
                     print(value);
                     _darkThemeEnabled = value;
                   },
-                ),
+                ), */
                 ListTile(
                   title: Text(
                     "App Info",

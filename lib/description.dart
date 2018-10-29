@@ -173,7 +173,6 @@ class DescriptionPage extends StatelessWidget {
   }
 
   Widget _buildContent2(BuildContext context, String imageUrl, String rating) {
-    print(imageUrl);
     return Material(
       color: Theme.of(context).primaryColor,
       child: InkWell(

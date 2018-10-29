@@ -1,6 +1,6 @@
 # Anime Browser
 
-This is a flutter equivalent of an app previously made with native android code.
+This is a flutter successor of an app previously made with native android code.
 The native android version fetched a json file and outputted it as a styled list of cards
 
 This flutter alternative shares a similar design however many more features have been added. 

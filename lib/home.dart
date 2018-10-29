@@ -41,6 +41,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildCard(int index) {
     final alreadySaved = _saved.contains(index);
+    int episode = data[index]["episodes"];
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
       color: Theme.of(context).cardColor,
@@ -140,7 +141,7 @@ class _HomePageState extends State<HomePage> {
                     children: <Widget>[
                       Expanded(
                         child: Text(
-                          data[index]["studio"],
+                          data[index]["studio"] + " · $episode episodes",
                           style: Theme.of(context)
                               .textTheme
                               .subhead
