@@ -1,0 +1,86 @@
+/* NestedScrollView(
+        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+          return <Widget>[
+            SliverAppBar(
+              expandedHeight: 300.0,
+              primary: true,
+              backgroundColor: Theme.of(context).backgroundColor,
+              floating: false,
+              pinned: true,
+              flexibleSpace: Column(
+                children: <Widget>[
+                  Expanded(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: <Widget>[
+                        Expanded(
+                          child: FlexibleSpaceBar(
+                            title: Text(name),
+                            collapseMode: CollapseMode.none,/* 
+                            background: CachedNetworkImage(
+                                imageUrl:
+                                    "https://images.pexels.com/photos/396547/pexels-photo-396547.jpeg?auto=compress&cs=tinysrgb&h=350",
+                                fit: BoxFit.fitHeight), */
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ];
+        },
+        body: ListView(
+          children: <Widget>[
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 32.0, vertical: 20.0),
+              child: Text(
+                description,
+                style:
+                    Theme.of(context).textTheme.body1.copyWith(fontSize: 16.0),
+              ),
+            ),
+            SizedBox(
+              height: 16.0,
+            ),
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 32.0),
+              child: Text("Similar Content",
+                  style: Theme.of(context).textTheme.subhead.copyWith(
+                      fontSize: 18.0,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold)),
+            ),
+            SizedBox(
+              height: 12.0,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                SizedBox(
+                  width: 16.0,
+                ),
+                _buildContent2(
+                    context,
+                    "https://myanimelist.cdn-dena.com/r/108x163/s/common/store/cover/974/85b97a507be316ff690d728b22a9c0cbeac36161057e9b8a7fb0612df2e53d98/l.jpg?s=31aae211ae94d9b5aa7d14160e7aa6dd",
+                    "7.5",
+                    "Forget me not"),
+                _buildContent2(
+                    context,
+                    "https://myanimelist.cdn-dena.com/s/common/store/cover/960/d12a3c79c4d0d46235c4bd35a1cc30664f818c4f15d34ea13dc328ab80f42ba6/l.jpg",
+                    "7.6",
+                    "The Drops of God"),
+                _buildContent2(
+                    context,
+                    "https://myanimelist.cdn-dena.com/s/common/store/cover/1367/0a8f4f9e7cbdfa6a3f5ca40e471df8a00ae3963a1b3894ea5a23d2a83f6ed9cd/l.jpg",
+                    "8.0",
+                    "Cells at Work"),
+                SizedBox(
+                  width: 16.0,
+                ),
+              ],
+            )
+          ],
+        ),
+      ), */

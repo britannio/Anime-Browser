@@ -2,24 +2,28 @@ import 'package:flutter/material.dart';
 import 'home.dart';
 import 'favourites.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'appearance.dart';
 
 /* 
 TODO
- - Complete the navigation drawer
- - Use slivers to create the collapsing toolbar effect for the description page
- - Make the hyperlink in the information dialog work 
- - Add shared element transitions to the anime image 
- - In the description page, after the description show a horizontal row of similar anime based on the category of the anime being viewed
+ - Implement the dark theme toggle
  - Implement the favourites page feature
- - Create a larger dataset using myanimelist.com
+ - Add all data to the description page
+ - Add shared element transitions to the anime image for the description page
  - Add a splash screen on Android and IOS
- - Add an app icon
+ - Establish themes
+ - Add a scroll bar
 
-CONSIDER
+CONSIDER for v2+
  - Use SQL or firebase to store item information
  - Think about a dynamic homepage with more compact cards
-
- Done
+ - In the description page, after the description show a horizontal row of similar anime based on the category of the anime being viewed
+ - Add an app icon
+ - Adding search
+ - Add accent color changing
+ 
+ 
+ - Add sorting by popularity
  */
 
 void main() => runApp(new MyApp());
@@ -29,6 +33,7 @@ const String appName = "Anime Browser";
 final ThemeData _baseDarkTheme = ThemeData(primaryColor: Color(0xFF212121));
 
 final ThemeData _darkTheme = ThemeData(
+  canvasColor: _baseDarkTheme.primaryColor,
   backgroundColor: Color(0xFF141414),
   cardColor: _baseDarkTheme.primaryColor,
   accentColor: Colors.blue,
@@ -72,6 +77,7 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   bool _darkThemeEnabled = true;
+  int dropDownValue = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -94,10 +100,10 @@ class _MainPageState extends State<MainPage> {
                   title: new Text(appName),
                   actions: <Widget>[
                     IconButton(
-                      tooltip: "Sort by",
-                      icon: Icon(Icons.sort),
+                      tooltip: "Info",
+                      icon: Icon(Icons.info_outline),
                       onPressed: () {
-                        final snackBar = SnackBar(
+                        /* final snackBar = SnackBar(
                           content: Text("Feature unavailable"),
                           action: SnackBarAction(
                             label: "OKAY",
@@ -107,18 +113,54 @@ class _MainPageState extends State<MainPage> {
 
                         // Find the Scaffold in the Widget tree and use it to show a SnackBar
                         _scaffoldKey.currentState.showSnackBar(snackBar);
-                        print("Snackbar pressed");
+                        print("Snackbar pressed"); */
+                        _infoDialog();
                       },
                     ),
                   ],
                 ),
-                TabBar(
-                  isScrollable: true,
-                  tabs: <Widget>[
-                    Tab(text: "HOME"),
-                    Tab(text: "FAVOURITES"),
+                Row(
+                  children: <Widget>[
+                    TabBar(
+                      isScrollable: true,
+                      tabs: <Widget>[
+                        Tab(text: "HOME"),
+                        Tab(text: "FAVOURITES"),
+                      ],
+                    ),
+                    Expanded(
+                      child: Container(),
+                    ),
+                    DropdownButton(
+                      style: Theme.of(context).textTheme.subhead,
+                      value: dropDownValue,
+                      onChanged: (int) {
+                        setState(() {
+                          dropDownValue = int;
+                        });
+                      },
+                      items: <DropdownMenuItem>[
+                        DropdownMenuItem(
+                          value: 0,
+                          child: Text(
+                            "Top Rated",
+                            //style: Theme.of(context).textTheme.subhead,
+                          ),
+                        ),
+                        DropdownMenuItem(
+                          value: 1,
+                          child: Text(
+                            "Most Popular",
+                            //style: Theme.of(context).textTheme.subhead,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      width: 24.0,
+                    )
                   ],
-                ),
+                )
               ],
             ),
           ),
@@ -139,7 +181,7 @@ class _MainPageState extends State<MainPage> {
                   decoration:
                       BoxDecoration(color: Theme.of(context).accentColor),
                 ),
-                /* SwitchListTile(
+                SwitchListTile(
                   title: Text(
                     "Dark Mode",
                     style: Theme.of(context)
@@ -152,7 +194,25 @@ class _MainPageState extends State<MainPage> {
                     print(value);
                     _darkThemeEnabled = value;
                   },
-                ), */
+                ),
+                /* ListTile(
+                  title: Text(
+                    "Appearance",
+                    style: Theme.of(context)
+                        .textTheme
+                        .title
+                        .copyWith(fontSize: 16.0),
+                  ),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AppearancePage(),
+                      ),
+                    );
+                  },
+                ),
                 ListTile(
                   title: Text(
                     "App Info",
@@ -166,14 +226,14 @@ class _MainPageState extends State<MainPage> {
                         context); // closes the drawer after this item is pressed
                     _infoDialog();
                   },
-                ),
+                ), */
               ],
             ),
           ),
         ),
         body: TabBarView(
           children: <Widget>[
-            HomePage(),
+            HomePage(dropDownValue),
             FavouritesPage(),
           ],
         ),
