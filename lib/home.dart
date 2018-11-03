@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'description.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+//import 'package:shimmer/shimmer.dart';
 
 const String appName = "Anime Catalog";
 const String rating_url =
@@ -12,7 +13,7 @@ const String rating_url =
 const String popularity_url =
     "http://apps.britannio.com/anime_browser/v1/content/most_popular.json";
 const String kDarkMode = "dark_mode";
-
+const String fav_id_key = "fav_item_key";
 
 class HomePage extends StatefulWidget {
   final int dropDownValue;
@@ -24,10 +25,11 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final int dropDownValue;
-  
+
   _HomePageState(this.dropDownValue);
-  
+
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -43,7 +45,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  var _saved = Set<int>();
+  var _saved = [];
 
   /* _saveIndex(int index) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -63,8 +65,47 @@ class _HomePageState extends State<HomePage> {
     return _output;
   }
 
+  Future<Null> changeFavourites({String malId, bool add}) async {
+    final SharedPreferences prefs = await _prefs;
+
+    var oldList = prefs.getStringList(fav_id_key);
+    print("before change - $oldList");
+
+    if (add) {
+      // Add id to the string array
+      if (oldList == null) {
+        prefs.setStringList(fav_id_key, [malId]);
+      } else {
+        oldList.add(malId);
+        prefs.setStringList(fav_id_key, oldList);
+      }
+    } else {
+      // Remove id from the string array
+      oldList.remove(malId);
+      prefs.setStringList(fav_id_key, oldList);
+    }
+    _saved = oldList;
+    print("after change - $_saved");
+  }
+
+  Future<Null> getFavourites() async {
+    final SharedPreferences prefs = await _prefs;
+    var favourites = prefs.getStringList(fav_id_key);
+    print("pref - $favourites");
+    this.setState(
+      () {
+        if (favourites != null) {
+          _saved = favourites;
+        } else {
+          _saved = [];
+        }
+      },
+    );
+  }
+
   Widget _buildCard(int index) {
-    final alreadySaved = _saved.contains(index);
+    final alreadySaved =
+        _saved != null ? _saved.contains(data[index]["id"]) : false;
     return Container(
       height: 160.0,
       child: Card(
@@ -92,6 +133,8 @@ class _HomePageState extends State<HomePage> {
                         rank: data[index]["rank"],
                         season: data[index]["season"],
                         url: data[index]["url"],
+                        episodes: data[index]["episodes"],
+                        id: data[index]["id"],
                       )
                   // Fat arrow notation so context is an argument and DescriptionPage is the function being invoked
                   ),
@@ -102,18 +145,30 @@ class _HomePageState extends State<HomePage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Container(
-                // Contains the image
                 width: 100.0,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(
+                height: 160.0,
+                child:
+                    /* DecoratedBox(
+                    decoration: BoxDecoration(
+                        image: DecorationImage(
+                            image: CachedNetworkImageProvider(
+                                data[index]["img"]))),
+                  ) */
+                    Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(4.0),
-                      bottomLeft: Radius.circular(4.0)),
-                  image: DecorationImage(
-                    image: CachedNetworkImageProvider(data[index]["img"],
+                      bottomLeft: Radius.circular(4.0),
+                    ),
+                    image: DecorationImage(
+                      image: CachedNetworkImageProvider(
+                        data[index]["img"],
                         errorListener: () {
-                      print("Image failed to load");
-                    }), //NetworkImage(data[index]["img"]),
-                    fit: BoxFit.fitHeight,
+                          print("Image failed to load");
+                        },
+                      ), //NetworkImage(data[index]["img"]),
+                      fit: BoxFit.fill,
+                    ),
                   ),
                 ),
               ),
@@ -212,11 +267,15 @@ class _HomePageState extends State<HomePage> {
                           onPressed: () {
                             setState(() {
                               if (alreadySaved) {
-                                _saved.remove(index);
+                                _saved.remove(data[index]["id"]);
+                                changeFavourites(
+                                    malId: data[index]["id"], add: false);
                                 print(data[index]["name"] +
                                     " removed from favourites");
                               } else {
-                                _saved.add(index);
+                                _saved.add(data[index]["id"]);
+                                changeFavourites(
+                                    malId: data[index]["id"], add: true);
                                 print(data[index]["name"] +
                                     " added to favourites");
                               }
@@ -239,14 +298,17 @@ class _HomePageState extends State<HomePage> {
 
   // Retreives json data
   Future<String> getData() async {
-    var response = await http.get(Uri.encodeFull(dropDownValue == 0 ? rating_url : popularity_url),
+    var response = await http.get(
+        Uri.encodeFull(dropDownValue == 0 ? rating_url : popularity_url),
         headers: {"Accept": "application/json"});
 
-    this.setState(() {
-      // Calls the build method which re-renders the listview
-      data = json.decode(response.body);
-      //print(data);
-    });
+    if (this.mounted) {
+      this.setState(() {
+        // Calls the build method which re-renders the listview
+        data = json.decode(response.body);
+        //print(data);
+      });
+    }
 
     return "Success!";
   }
@@ -254,6 +316,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     // Will run before anything is rendered on the screen
+    this.getFavourites();
     this.getData();
     super.initState();
   }

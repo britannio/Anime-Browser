@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 class FavouritesPage extends StatefulWidget {
   _FavouritesPageState createState() => _FavouritesPageState();
 }

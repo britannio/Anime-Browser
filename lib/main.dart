@@ -3,6 +3,8 @@ import 'home.dart';
 import 'favourites.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'appearance.dart';
+import 'info_dialog.dart';
+import 'description.dart';
 
 /* 
 TODO
@@ -13,6 +15,8 @@ TODO
  - Add a splash screen on Android and IOS
  - Establish themes
  - Add a scroll bar
+ - Use a cached image network widget to create a shimmer effect for the loading images
+ - Create an individual json file for each anime item
 
 CONSIDER for v2+
  - Use SQL or firebase to store item information
@@ -21,14 +25,13 @@ CONSIDER for v2+
  - Add an app icon
  - Adding search
  - Add accent color changing
- 
- 
- - Add sorting by popularity
+
+
  */
 
 void main() => runApp(new MyApp());
 
-const String appName = "Anime Browser";
+const String _appName = "Anime Browser";
 
 final ThemeData _baseDarkTheme = ThemeData(primaryColor: Color(0xFF212121));
 
@@ -56,10 +59,13 @@ final ThemeData _darkTheme = ThemeData(
 final ThemeData _lightTheme = ThemeData();
 
 class MyApp extends StatelessWidget {
+
+  static String appName = _appName;
+
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
-      title: appName,
+      title: _appName,
       theme: _darkTheme,
       home: new MainPage(),
     );
@@ -97,7 +103,7 @@ class _MainPageState extends State<MainPage> {
               children: <Widget>[
                 AppBar(
                   elevation: 0.0,
-                  title: new Text(appName),
+                  title: new Text(_appName),
                   actions: <Widget>[
                     IconButton(
                       tooltip: "Info",
@@ -114,7 +120,7 @@ class _MainPageState extends State<MainPage> {
                         // Find the Scaffold in the Widget tree and use it to show a SnackBar
                         _scaffoldKey.currentState.showSnackBar(snackBar);
                         print("Snackbar pressed"); */
-                        _infoDialog();
+                        infoDialog(context, appName: _appName);
                       },
                     ),
                   ],
@@ -135,9 +141,11 @@ class _MainPageState extends State<MainPage> {
                       style: Theme.of(context).textTheme.subhead,
                       value: dropDownValue,
                       onChanged: (int) {
-                        setState(() {
-                          dropDownValue = int;
-                        });
+                        if (int != dropDownValue) {
+                          setState(() {
+                            dropDownValue = int;
+                          });
+                        }
                       },
                       items: <DropdownMenuItem>[
                         DropdownMenuItem(
@@ -157,7 +165,7 @@ class _MainPageState extends State<MainPage> {
                       ],
                     ),
                     SizedBox(
-                      width: 24.0,
+                      width: 16.0,
                     )
                   ],
                 )
@@ -173,7 +181,7 @@ class _MainPageState extends State<MainPage> {
               children: <Widget>[
                 DrawerHeader(
                   child: Center(
-                      child: Text(appName,
+                      child: Text(_appName,
                           style: Theme.of(context)
                               .textTheme
                               .title
@@ -241,47 +249,7 @@ class _MainPageState extends State<MainPage> {
     );
   }
 
-  // Alert Dialog
-  void _infoDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(appName, style: Theme.of(context).textTheme.title),
-          content: RichText(
-            text: TextSpan(
-              text:
-                  "This is a flutter equivalent of an app previously made with native android code. The native android version only fetched a json file and outputted it as a styled list of cards, this version has many more features.",
-              style: Theme.of(context).textTheme.body1,
-              /* children: <TextSpan>[
-                TextSpan(
-                  text: "http://androiddemos.britannio.com/anime.json",
-                  style: TextStyle(
-                      color: Colors.blueAccent,
-                      decoration: TextDecoration.underline),
-                )
-              ], */
-            ),
-          ),
-          actions: <Widget>[
-            FlatButton(
-              child: Text("DISMISS"),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            FlatButton(
-              child: Text("GITHUB"),
-              onPressed: () {
-                Navigator.of(context).pop();
-                _launchURL("https://github.com/britannio/Anime-Browser");
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
+
 
   _launchURL(url) async {
     if (await canLaunch(url)) {

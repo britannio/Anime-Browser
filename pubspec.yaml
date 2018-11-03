@@ -27,6 +27,8 @@ dependencies:
 
   url_launcher: ^4.0.1
 
+  shimmer: ^0.0.5
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
