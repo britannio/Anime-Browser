@@ -12,7 +12,6 @@ TODO
  - Implement the favourites page feature
  - Add all data to the description page
  - Add shared element transitions to the anime image for the description page
- - Add a splash screen on Android and IOS
  - Establish themes
  - Add a scroll bar
  - Use a cached image network widget to create a shimmer effect for the loading images
@@ -81,9 +80,12 @@ class MainPage extends StatefulWidget {
   _MainPageState createState() => new _MainPageState();
 }
 
-class _MainPageState extends State<MainPage> {
+class _MainPageState extends State<MainPage> with AutomaticKeepAliveClientMixin<MainPage> {
   bool _darkThemeEnabled = true;
   int dropDownValue = 0;
+
+  //@overrride
+  bool get wantKeepAlive => true;
 
   @override
   Widget build(BuildContext context) {

@@ -4,9 +4,9 @@ import 'package:url_launcher/url_launcher.dart';
 import 'info_dialog.dart';
 import 'main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'constants.dart';
 
 String appName = MyApp.appName;
-const String fav_id_key = "fav_item_key";
 
 String stringFromArray(List list, String separator) {
   String _output;
@@ -197,13 +197,13 @@ class _DescriptionPageState extends State<DescriptionPage> {
                                       onPressed: () {
                                         setState(() {
                                           if (alreadySaved) {
-                                            _saved.remove(widget.id);
+                                            //_saved.remove(widget.id);
                                             changeFavourites(
                                                 malId: widget.id, add: false);
                                             print(widget.name +
                                                 " removed from favourites");
                                           } else {
-                                            _saved.add(widget.id);
+                                            //_saved.add(widget.id);
                                             changeFavourites(
                                                 malId: widget.id, add: true);
                                             print(widget.name +

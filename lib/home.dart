@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
-import 'dart:convert';
+import 'dart:convert'; // for json
 import 'package:http/http.dart' as http;
 import 'description.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -267,13 +267,13 @@ class _HomePageState extends State<HomePage> {
                           onPressed: () {
                             setState(() {
                               if (alreadySaved) {
-                                _saved.remove(data[index]["id"]);
+                                //_saved.remove(data[index]["id"]);
                                 changeFavourites(
                                     malId: data[index]["id"], add: false);
                                 print(data[index]["name"] +
                                     " removed from favourites");
                               } else {
-                                _saved.add(data[index]["id"]);
+                               // _saved.add(data[index]["id"]);
                                 changeFavourites(
                                     malId: data[index]["id"], add: true);
                                 print(data[index]["name"] +
