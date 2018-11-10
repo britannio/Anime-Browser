@@ -105,7 +105,6 @@ class _FavouritesPageState extends State<FavouritesPage> {
   Widget _buildCard(var data, var cardIndex) {
     // use http://apps.britannio.com/anime_browser/v1/items/{ITEM_ID}.json
     // to retrieve json
-
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 2.0),
       height: 160.0,

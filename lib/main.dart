@@ -33,6 +33,7 @@ void main() => runApp(new MyApp());
 const String _appName = "Anime Browser";
 
 final ThemeData _baseDarkTheme = ThemeData(primaryColor: Color(0xFF212121));
+final ThemeData _baseLightTheme = ThemeData(primaryColor: Colors.white);
 
 final ThemeData _darkTheme = ThemeData(
   canvasColor: _baseDarkTheme.primaryColor,
@@ -40,7 +41,9 @@ final ThemeData _darkTheme = ThemeData(
   cardColor: _baseDarkTheme.primaryColor,
   accentColor: Colors.blue,
   primaryColor: _baseDarkTheme.primaryColor,
-  primaryColorLight: Color(0xFF484848),
+  //primaryColorLight: Color(0xFF484848),
+  primaryColorLight: Color(0xFF141414),
+  primaryColorDark: Color(0xFF090909),
   textTheme: TextTheme(
     title: TextStyle(
       color: Colors.white,
@@ -49,16 +52,50 @@ final ThemeData _darkTheme = ThemeData(
     ),
     subhead: TextStyle(color: Color(0xFF9E9E9E)),
     headline: TextStyle(color: Color(0xFF9E9E9E)),
-    body1: TextStyle(color: Colors.white),
+    body1: TextStyle(color: Color(0xFF9E9E9E), fontSize: 16.0),
+  ),
+  accentTextTheme: TextTheme(
+    title: TextStyle(
+      color: Colors.white,
+      fontWeight: FontWeight.bold,
+      fontSize: 20.0,
+    ),
   ),
   dialogBackgroundColor: _baseDarkTheme.primaryColor,
   dividerColor: Color(0xFF9E9E9E),
 );
 
-final ThemeData _lightTheme = ThemeData();
+final ThemeData _lightTheme = ThemeData(
+  //brightness: Brightness.light,
+  canvasColor: _baseLightTheme.primaryColor,
+  backgroundColor: Colors.white,
+  cardColor: _baseLightTheme.primaryColor,
+  accentColor: Colors.blue,
+  primaryColor: _baseLightTheme.primaryColor,
+  //primaryColorLight: Color(0xFF484848),
+  primaryColorLight: Colors.blue,
+  primaryColorDark: Colors.white,
+  textTheme: TextTheme(
+    title: TextStyle(
+      color: Colors.black,
+      fontWeight: FontWeight.bold,
+      fontSize: 20.0,
+    ),
+    subhead: TextStyle(color: Color(0xFF9E9E9E)),
+    headline: TextStyle(color: Color(0xFF9E9E9E)),
+    body1: TextStyle(color: Color(0xFF9E9E9E), fontSize: 16.0),
+  ),
+  accentTextTheme: TextTheme(
+      title: TextStyle(
+    color: Colors.white,
+    fontWeight: FontWeight.bold,
+    fontSize: 20.0,
+  )),
+  dialogBackgroundColor: _baseLightTheme.primaryColor,
+  dividerColor: Colors.white,
+);
 
 class MyApp extends StatelessWidget {
-
   static String appName = _appName;
 
   @override
@@ -80,7 +117,8 @@ class MainPage extends StatefulWidget {
   _MainPageState createState() => new _MainPageState();
 }
 
-class _MainPageState extends State<MainPage> with AutomaticKeepAliveClientMixin<MainPage> {
+class _MainPageState extends State<MainPage>
+    with AutomaticKeepAliveClientMixin<MainPage> {
   bool _darkThemeEnabled = true;
   int dropDownValue = 0;
 
@@ -100,10 +138,12 @@ class _MainPageState extends State<MainPage> with AutomaticKeepAliveClientMixin<
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(104.0),
           child: new AppBar(
+            //backgroundColor: Theme.of(context).accentColor,
             flexibleSpace: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 AppBar(
+                  //backgroundColor: Theme.of(context).accentColor,
                   elevation: 0.0,
                   title: new Text(_appName),
                   actions: <Widget>[
@@ -187,24 +227,37 @@ class _MainPageState extends State<MainPage> with AutomaticKeepAliveClientMixin<
                           style: Theme.of(context)
                               .textTheme
                               .title
-                              .copyWith(fontSize: 32.0))),
+                              .copyWith(fontSize: 32.0, color: Colors.white))),
                   decoration:
                       BoxDecoration(color: Theme.of(context).accentColor),
                 ),
-                SwitchListTile(
+                ListTile(
+                  title: Text("Made by Britannio",
+                      style: Theme.of(context).textTheme.title),
+                  trailing: IconButton(
+                    icon: Icon(Icons.open_in_new, color: Colors.white,),
+                    onPressed: () {
+                      Navigator.pop(
+                        context);
+                      _launchURL("https://github.com/britannio/Anime-Browser");
+                    },
+                  ),
+                ),
+                /* SwitchListTile(
                   title: Text(
                     "Dark Mode",
                     style: Theme.of(context)
                         .textTheme
                         .title
-                        .copyWith(fontSize: 16.0),
+                        .cop
+                        yWith(fontSize: 16.0),
                   ),
                   value: _darkThemeEnabled,
                   onChanged: (bool value) {
                     print(value);
                     _darkThemeEnabled = value;
                   },
-                ),
+                ), */
                 /* ListTile(
                   title: Text(
                     "Appearance",
@@ -250,8 +303,6 @@ class _MainPageState extends State<MainPage> with AutomaticKeepAliveClientMixin<
       ),
     );
   }
-
-
 
   _launchURL(url) async {
     if (await canLaunch(url)) {
