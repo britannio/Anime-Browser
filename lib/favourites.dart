@@ -12,12 +12,15 @@ class FavouritesPage extends StatefulWidget {
   _FavouritesPageState createState() => _FavouritesPageState();
 }
 
-class _FavouritesPageState extends State<FavouritesPage> {
+class _FavouritesPageState extends State<FavouritesPage> with AutomaticKeepAliveClientMixin<FavouritesPage>{
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   var _saved = [];
   //List<Widget> idTextList = _saved.map((item) => new Text(map)).toList());
 
   List<Container> _cards = [];
+
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +37,9 @@ class _FavouritesPageState extends State<FavouritesPage> {
 
   Future<Null> getFavourites() async {
     final SharedPreferences prefs = await _prefs;
-    var favourites = prefs.getStringList(fav_id_key);
+    var favourites = prefs.getStringList("fav_item_key") != null
+        ? prefs.getStringList("fav_item_key")
+        : List<String>();
     print("pref - $favourites");
 
     int cardIndex = 0;
@@ -92,6 +97,7 @@ class _FavouritesPageState extends State<FavouritesPage> {
     // Will run before anything is rendered on the screen
     this.getFavourites();
     super.initState();
+    print("favourites.dart: initState invoked");
   }
 
   _launchURL(url) async {
@@ -250,7 +256,10 @@ class _FavouritesPageState extends State<FavouritesPage> {
                         ),
                         Expanded(
                           child: FlatButton(
-                            child: Text("VISIT SITE", style: TextStyle(color: Colors.white),),
+                            child: Text(
+                              "VISIT SITE",
+                              style: TextStyle(color: Colors.white),
+                            ),
                             onPressed: () {
                               _launchURL(data["url"]);
                             },

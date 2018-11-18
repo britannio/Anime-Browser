@@ -23,7 +23,11 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState(dropDownValue);
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin<HomePage>{
+
+  @override
+  bool get wantKeepAlive => true;
+
   final int dropDownValue;
 
   _HomePageState(this.dropDownValue);
@@ -32,6 +36,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    print("home.dart: build method invoked");
     return Container(
       margin: EdgeInsets.symmetric(vertical: 4.0),
       child: ListView.builder(
@@ -319,5 +324,6 @@ class _HomePageState extends State<HomePage> {
     this.getFavourites();
     this.getData();
     super.initState();
+    print("home.dart: initState invoked");
   }
 }

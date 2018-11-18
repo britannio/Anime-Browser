@@ -8,14 +8,18 @@ import 'description.dart';
 
 /* 
 TODO
- - Implement the dark theme toggle
- - Implement the favourites page feature
- - Add all data to the description page
+ - Add loading circles
+ - Retain tab state
+ - Add a message to the favourite page when it's blank
  - Add shared element transitions to the anime image for the description page
- - Establish themes
  - Add a scroll bar
+ - Fix favourite button not changing on first launch
+
+ - Establish themes
+ - Implement the dark theme toggle
  - Use a cached image network widget to create a shimmer effect for the loading images
- - Create an individual json file for each anime item
+ - Use a reactive architecture
+
 
 CONSIDER for v2+
  - Use SQL or firebase to store item information
@@ -24,6 +28,7 @@ CONSIDER for v2+
  - Add an app icon
  - Adding search
  - Add accent color changing
+ - Master detail page
 
 
  */
@@ -118,40 +123,66 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage>
-    with AutomaticKeepAliveClientMixin<MainPage> {
+    with SingleTickerProviderStateMixin {
   bool _darkThemeEnabled = true;
   int dropDownValue = 0;
 
-  //@overrride
-  bool get wantKeepAlive => true;
+  TabController _tabController;
+  List<StatefulWidget> _homeLists; // = List(_tabs.length);
+
+  // List of the TabBar's tabs
+  List<Widget> _tabs = <Tab>[
+    Tab(text: 'HOME'),
+    Tab(text: 'FAVOURITES'),
+  ];
+
+  @override
+  void initState() {
+
+    // Tab controller init
+    _tabController = TabController(
+      length: 2,
+      vsync: this,
+      initialIndex: 1,
+    );
+
+    // List array init
+    _homeLists = [HomePage(dropDownValue), FavouritesPage()];
+    super.initState();
+
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final GlobalKey<ScaffoldState> _scaffoldKey =
         new GlobalKey<ScaffoldState>();
     // Scaffold key is required to refer to the context of the scaffold before it's context is available i.e. in the appbar
-    return DefaultTabController(
-      length: 2,
-      child: new Scaffold(
-        key: _scaffoldKey,
-        backgroundColor: Theme.of(context).backgroundColor,
-        appBar: PreferredSize(
-          preferredSize: Size.fromHeight(104.0),
-          child: new AppBar(
-            //backgroundColor: Theme.of(context).accentColor,
-            flexibleSpace: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                AppBar(
-                  //backgroundColor: Theme.of(context).accentColor,
-                  elevation: 0.0,
-                  title: new Text(_appName),
-                  actions: <Widget>[
-                    IconButton(
-                      tooltip: "Info",
-                      icon: Icon(Icons.info_outline),
-                      onPressed: () {
-                        /* final snackBar = SnackBar(
+    return Scaffold(
+      key: _scaffoldKey,
+      backgroundColor: Theme.of(context).backgroundColor,
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(104.0),
+        child: new AppBar(
+          //backgroundColor: Theme.of(context).accentColor,
+          flexibleSpace: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              AppBar(
+                //backgroundColor: Theme.of(context).accentColor,
+                elevation: 0.0,
+                title: new Text(_appName),
+                actions: <Widget>[
+                  IconButton(
+                    tooltip: "Info",
+                    icon: Icon(Icons.info_outline),
+                    onPressed: () {
+                      /* final snackBar = SnackBar(
                           content: Text("Feature unavailable"),
                           action: SnackBarAction(
                             label: "OKAY",
@@ -162,88 +193,87 @@ class _MainPageState extends State<MainPage>
                         // Find the Scaffold in the Widget tree and use it to show a SnackBar
                         _scaffoldKey.currentState.showSnackBar(snackBar);
                         print("Snackbar pressed"); */
-                        infoDialog(context, appName: _appName);
-                      },
-                    ),
-                  ],
-                ),
-                Row(
-                  children: <Widget>[
-                    TabBar(
-                      isScrollable: true,
-                      tabs: <Widget>[
-                        Tab(text: "HOME"),
-                        Tab(text: "FAVOURITES"),
-                      ],
-                    ),
-                    Expanded(
-                      child: Container(),
-                    ),
-                    DropdownButton(
-                      style: Theme.of(context).textTheme.subhead,
-                      value: dropDownValue,
-                      onChanged: (int) {
-                        if (int != dropDownValue) {
-                          setState(() {
-                            dropDownValue = int;
-                          });
-                        }
-                      },
-                      items: <DropdownMenuItem>[
-                        DropdownMenuItem(
-                          value: 0,
-                          child: Text(
-                            "Top Rated",
-                            //style: Theme.of(context).textTheme.subhead,
-                          ),
-                        ),
-                        DropdownMenuItem(
-                          value: 1,
-                          child: Text(
-                            "Most Popular",
-                            //style: Theme.of(context).textTheme.subhead,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      width: 16.0,
-                    )
-                  ],
-                )
-              ],
-            ),
-          ),
-        ),
-        drawer: Drawer(
-          child: Container(
-            color: Theme.of(context).backgroundColor,
-            child: ListView(
-              padding: EdgeInsets.zero, // Removes padding
-              children: <Widget>[
-                DrawerHeader(
-                  child: Center(
-                      child: Text(_appName,
-                          style: Theme.of(context)
-                              .textTheme
-                              .title
-                              .copyWith(fontSize: 32.0, color: Colors.white))),
-                  decoration:
-                      BoxDecoration(color: Theme.of(context).accentColor),
-                ),
-                ListTile(
-                  title: Text("Made by Britannio",
-                      style: Theme.of(context).textTheme.title),
-                  trailing: IconButton(
-                    icon: Icon(Icons.open_in_new, color: Colors.white,),
-                    onPressed: () {
-                      Navigator.pop(
-                        context);
-                      _launchURL("https://github.com/britannio/Anime-Browser");
+                      infoDialog(context, appName: _appName);
                     },
                   ),
+                ],
+              ),
+              Row(
+                children: <Widget>[
+                  TabBar(
+                    isScrollable: true,
+                    tabs: _tabs,
+                    controller: _tabController,
+                  ),
+                  Expanded(
+                    child: Container(),
+                  ),
+                  DropdownButton(
+                    style: Theme.of(context).textTheme.subhead,
+                    value: dropDownValue,
+                    onChanged: (int) {
+                      if (int != dropDownValue) {
+                        setState(() {
+                          dropDownValue = int;
+                        });
+                      }
+                    },
+                    items: <DropdownMenuItem>[
+                      DropdownMenuItem(
+                        value: 0,
+                        child: Text(
+                          "Top Rated",
+                          //style: Theme.of(context).textTheme.subhead,
+                        ),
+                      ),
+                      DropdownMenuItem(
+                        value: 1,
+                        child: Text(
+                          "Most Popular",
+                          //style: Theme.of(context).textTheme.subhead,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    width: 16.0,
+                  )
+                ],
+              )
+            ],
+          ),
+        ),
+      ),
+      drawer: Drawer(
+        child: Container(
+          color: Theme.of(context).backgroundColor,
+          child: ListView(
+            padding: EdgeInsets.zero, // Removes padding
+            children: <Widget>[
+              DrawerHeader(
+                child: Center(
+                    child: Text(_appName,
+                        style: Theme.of(context)
+                            .textTheme
+                            .title
+                            .copyWith(fontSize: 32.0, color: Colors.white))),
+                decoration: BoxDecoration(color: Theme.of(context).accentColor),
+              ),
+              ListTile(
+                title: Text("Made by Britannio",
+                    style: Theme.of(context).textTheme.title),
+                trailing: IconButton(
+                  icon: Icon(
+                    Icons.open_in_new,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                    _launchURL("https://github.com/britannio/Anime-Browser");
+                  },
                 ),
-                /* SwitchListTile(
+              ),
+              /* SwitchListTile(
                   title: Text(
                     "Dark Mode",
                     style: Theme.of(context)
@@ -258,7 +288,7 @@ class _MainPageState extends State<MainPage>
                     _darkThemeEnabled = value;
                   },
                 ), */
-                /* ListTile(
+              /* ListTile(
                   title: Text(
                     "Appearance",
                     style: Theme.of(context)
@@ -290,16 +320,13 @@ class _MainPageState extends State<MainPage>
                     _infoDialog();
                   },
                 ), */
-              ],
-            ),
+            ],
           ),
         ),
-        body: TabBarView(
-          children: <Widget>[
-            HomePage(dropDownValue),
-            FavouritesPage(),
-          ],
-        ),
+      ),
+      body: TabBarView(
+        controller: _tabController,
+        children: <Widget>[HomePage(dropDownValue), FavouritesPage()]
       ),
     );
   }
