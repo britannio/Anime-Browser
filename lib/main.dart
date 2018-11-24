@@ -2,14 +2,13 @@ import 'package:flutter/material.dart';
 import 'home.dart';
 import 'favourites.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'appearance.dart';
+//import 'appearance.dart';
 import 'info_dialog.dart';
-import 'description.dart';
 
 /* 
 TODO
  - Add loading circles
- - Retain tab state
+ - Lift favourites data(shared prefs) up to the parent(main.dart) -- Scoped model should work
  - Add a message to the favourite page when it's blank
  - Add shared element transitions to the anime image for the description page
  - Add a scroll bar
@@ -19,17 +18,16 @@ TODO
  - Establish themes
  - Implement the dark theme toggle
  - Use a cached image network widget to create a shimmer effect for the loading images
- - Use a reactive architecture
 
 
 CONSIDER for v2+
- - Use SQL or firebase to store item information
+ - Use SQL or firebase to store item information, maybe even create python backend
  - Think about a dynamic homepage with more compact cards
  - In the description page, after the description show a horizontal row of similar anime based on the category of the anime being viewed
  - Add an app icon
- - Adding search
+ - Add search
  - Add accent color changing
- - Master detail page
+ - Master detail page(for tablets)
 
 
  */
@@ -125,7 +123,7 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage>
     with AutomaticKeepAliveClientMixin<MainPage> {
-  bool _darkThemeEnabled = true;
+  //bool _darkThemeEnabled = true;
   int dropDownValue = 0;
 
   //@overrride
@@ -317,31 +315,4 @@ class _MainPageState extends State<MainPage>
     }
   }
 
-  /* void _choiceAction(String choice) {
-    if (choice == "Disable Dark Mode") {
-      print("Dark Mode Disabled");
-    }
-  } */
 }
-
-/* class _LinkTextSpan extends TextSpan {
-  // Beware!
-  //
-  // This class is only safe because the TapGestureRecognizer is not
-  // given a deadline and therefore never allocates any resources.
-  //
-  // In any other situation -- setting a deadline, using any of the less trivial
-  // recognizers, etc -- you would have to manage the gesture recognizer's
-  // lifetime and call dispose() when the TextSpan was no longer being rendered.
-  //
-  // Since TextSpan itself is @immutable, this means that you would have to
-  // manage the recognizer from outside the TextSpan, e.g. in the State of a
-  // stateful widget that then hands the recognizer to the TextSpan.
-  _LinkTextSpan({ TextStyle style, String url, String text }) : super(
-    style: style,
-    text: text ?? url,
-    recognizer: TapGestureRecognizer()..onTap = () {
-      launch(url, forceSafariVC: false);
-    }
-  );
-} */

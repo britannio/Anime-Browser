@@ -78,7 +78,9 @@ class _FavouritesPageState extends State<FavouritesPage> with AutomaticKeepAlive
     if (add) {
       // Add id to the string array
       if (oldList == null) {
-        prefs.setStringList(fav_id_key, [malId]);
+        List<String> emptyList;
+        emptyList.add(malId);
+        prefs.setStringList(fav_id_key, emptyList);
       } else {
         oldList.add(malId);
         prefs.setStringList(fav_id_key, oldList);
@@ -88,6 +90,7 @@ class _FavouritesPageState extends State<FavouritesPage> with AutomaticKeepAlive
       oldList.remove(malId);
       prefs.setStringList(fav_id_key, oldList);
     }
+    
     _saved = oldList;
     print("after change - $_saved");
   }
@@ -282,13 +285,9 @@ class _FavouritesPageState extends State<FavouritesPage> with AutomaticKeepAlive
                           ),
                           onPressed: () {
                             setState(() {
-                              _saved.remove(data["id"]);
                               _cards[cardIndex] = null;
-                              //_cards.removeAt(cardIndex);
                               changeFavourites(malId: data["id"], add: false);
                               print(data["name"] + " removed from favourites");
-                              print("debug $_saved");
-                              print("debug $_cards");
                             });
                           },
                         ),
